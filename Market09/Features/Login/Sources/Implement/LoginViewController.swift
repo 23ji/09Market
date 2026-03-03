@@ -33,6 +33,7 @@ final class LoginViewController: UIViewController {
         return button
     }()
     
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -85,10 +86,11 @@ extension LoginViewController: View {
             .map { Reactor.Action.appleLoginTapped }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
+        
 
         // MARK: - State
         
-        reactor.state.map(\.error)
+        reactor.pulse(\.$error)
             .compactMap { $0 }
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] error in

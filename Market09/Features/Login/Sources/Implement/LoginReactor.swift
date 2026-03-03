@@ -30,7 +30,7 @@ final class LoginReactor: Reactor {
     struct State {
         var isLoading: Bool = false
         var isLoginCompleted: Bool = false
-        var error: AppError? = nil
+        @Pulse var error: AppError?
     }
     
     let initialState = State()
@@ -43,7 +43,6 @@ final class LoginReactor: Reactor {
 }
 
 extension LoginReactor {
-    
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .googleLoginCompleted(let idToken):
