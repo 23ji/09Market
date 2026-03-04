@@ -49,8 +49,8 @@ private extension ErrorDialog {
         retryAction: @escaping () -> Void
     ) {
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "닫기", style: .cancel))
-        alert.addAction(UIAlertAction(title: "재시도", style: .default) { _ in retryAction() })
+        alert.addAction(UIAlertAction(title: Strings.Common.cancel, style: .cancel))
+        alert.addAction(UIAlertAction(title: Strings.Common.retry, style: .default) { _ in retryAction() })
         viewController.present(alert, animated: true)
     }
 
@@ -60,7 +60,7 @@ private extension ErrorDialog {
         confirmAction: (() -> Void)? = nil
     ) {
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "확인", style: .default) { _ in confirmAction?() })
+        alert.addAction(UIAlertAction(title: Strings.Common.confirm, style: .default) { _ in confirmAction?() })
         viewController.present(alert, animated: true)
     }
 }
