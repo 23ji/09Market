@@ -5,9 +5,9 @@
 //  Created by Sangjin Lee
 //
 
+import Authenticate
 import Core
 import Domain
-import Authenticate
 import Login
 import Profile
 import UIKit
@@ -129,16 +129,6 @@ extension AppCoordinator: ProfileCoordinatorDelegate {
         navigationController.topViewController?.navigationItem.hidesBackButton = true
         navigationController.interactivePopGestureRecognizer?.isEnabled = false
     }
-
-    /// 프로필 탭에서 로그아웃 요청
-    func profileDidRequestLogout() {
-        
-    }
-    
-    /// 프로필 탭에서 회원 탈퇴 요청
-    func profileDidRequestDeleteAccount() {
-        // TODO: 추후 구현 예정
-    }
 }
 
 
@@ -150,14 +140,18 @@ extension AppCoordinator: LoginCoordinatorDelegate {
         switch loginContext {
         case .launch:
             showTabBar()
+            
         case .profile:
             navigationController.popViewController(animated: true)
+            
         case .requireLogin:
             navigationController.interactivePopGestureRecognizer?.isEnabled = true
             navigationController.popViewController(animated: true)
+            
         case .none:
             break
         }
+        
         loginContext = nil
     }
 }

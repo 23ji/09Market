@@ -112,7 +112,7 @@ extension ProfileReactor {
 
         case .setLoginRequired:
             newState.loginRequired = Void()
-            
+
         case .setLoading(let value):
             newState.isLoading = value
             

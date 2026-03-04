@@ -115,7 +115,7 @@ extension ProfileViewController: View {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] user in
                 self?.nicknameLabel.text = user?.nickname ?? "사용자"
-                self?.providerLabel.text = user?.provider
+                self?.providerLabel.text = user?.provider.rawValue
             })
             .disposed(by: disposeBag)
 

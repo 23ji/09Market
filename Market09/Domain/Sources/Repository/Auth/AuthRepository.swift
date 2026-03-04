@@ -5,6 +5,8 @@
 //  Created by Sangjin Lee
 //
 
+import Core
+
 public protocol AuthRepository {
 
     // MARK: - SignIn
