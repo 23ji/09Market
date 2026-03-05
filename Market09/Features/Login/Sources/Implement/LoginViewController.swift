@@ -6,12 +6,10 @@
 //
 
 import Core
+import Shared_ReactiveX
 import UIKit
 
 import GoogleSignIn
-import ReactorKit
-import RxCocoa
-import RxSwift
 
 final class LoginViewController: UIViewController {
     

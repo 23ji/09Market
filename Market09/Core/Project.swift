@@ -19,7 +19,10 @@ let project = Project(
             infoPlist: .default,
             sources: ["Sources/**"],
             dependencies: [
-                .external(name: "RxRelay"),
+                .project(
+                    target: "Shared_ReactiveX",
+                    path: .relativeToRoot("Shared_ReactiveX")
+                ),
             ]
         ),
         .target(
