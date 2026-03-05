@@ -14,6 +14,7 @@ let project = Project(
         name: "Domain",
         dependencies: [
             .module(.core),
+            .module(.util),
         ]
     ) + Project.implementTargets(
         name: "Domain",

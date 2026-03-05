@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Util
 
 public enum ErrorDialog {
 

@@ -1,6 +1,6 @@
 //
 //  JWTDecoder.swift
-//  Domain
+//  Util
 //
 //  Created by Sangjin Lee
 //

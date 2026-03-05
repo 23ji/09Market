@@ -1,6 +1,6 @@
 //
 //  Strings.swift
-//  Core
+//  Util
 //
 //  Created by Sangjin Lee
 //
@@ -25,7 +25,7 @@ public enum Strings {
         public static let deleteAccount = "회원탈퇴"
         public static let logoutConfirm = "로그아웃 하시겠어요?"
     }
-    
+
     public enum Auth {
         public static let googleLogin = "구글 로그인"
         public static let appleLogin = "애플 로그인"

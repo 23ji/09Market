@@ -47,6 +47,8 @@ public enum Module: String {
     case core = "Core"
     case data = "Data"
     case sharedReactiveX = "Shared_ReactiveX"
+    case util = "Util"
+    case designSystem = "DesignSystem"
 
     var projectPath: String {
         switch self {

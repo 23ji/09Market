@@ -1,6 +1,6 @@
 //
 //  LoadingIndicator.swift
-//  Core
+//  DesignSystem
 //
 //  Created by Sangjin Lee
 //

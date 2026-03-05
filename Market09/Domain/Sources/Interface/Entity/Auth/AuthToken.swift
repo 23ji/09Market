@@ -5,6 +5,8 @@
 //  Created by Sangjin Lee
 //
 
+import Util
+
 public struct AuthToken {
     public let accessToken: String
     public let refreshToken: String

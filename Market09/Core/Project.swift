@@ -6,6 +6,7 @@
 //
 
 import ProjectDescription
+import ProjectDescriptionHelpers
 
 let project = Project(
     name: "Core",
@@ -19,6 +20,7 @@ let project = Project(
             infoPlist: .default,
             sources: ["Sources/**"],
             dependencies: [
+                .module(.util),
                 .project(
                     target: "Shared_ReactiveX",
                     path: .relativeToRoot("Shared_ReactiveX")

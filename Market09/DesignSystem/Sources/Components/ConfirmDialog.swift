@@ -1,11 +1,12 @@
 //
 //  ConfirmDialog.swift
-//  Core
+//  DesignSystem
 //
 //  Created by Sangjin Lee
 //
 
 import UIKit
+import Util
 
 public enum ConfirmDialog {
 

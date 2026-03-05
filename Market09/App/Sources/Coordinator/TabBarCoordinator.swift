@@ -9,6 +9,7 @@ import UIKit
 import Core
 import Home
 import Profile
+import Util
 
 final class TabBarCoordinator: Coordinator {
     

@@ -20,7 +20,9 @@ let project = Project(
         dependencies: [
             .module(.core),
             .module(.domain),
+            .module(.designSystem),
             .module(.sharedReactiveX),
+            .module(.util),
             .external(name: "Swinject"),
         ]
     )

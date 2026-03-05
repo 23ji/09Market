@@ -70,6 +70,8 @@ let project = Project(
                 .module(.domainImpl),
                 .module(.core),
                 .module(.data),
+                .module(.util),
+                .module(.designSystem),
                 .feature(.home, type: .interface),
                 .feature(.home, type: .implement),
                 .feature(.auth, type: .interface),
