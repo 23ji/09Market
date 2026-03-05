@@ -1,15 +1,12 @@
 //
-//  DeleteAccountUseCase.swift
-//  Domain
+//  DeleteAccountUseCaseImpl.swift
+//  DomainImpl
 //
 //  Created by Sangjin Lee
 //
 
-public protocol DeleteAccountUseCase {
-    func execute() async throws
-}
-
 import Core
+import Domain
 
 public final class DeleteAccountUseCaseImpl: DeleteAccountUseCase {
 

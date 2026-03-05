@@ -1,15 +1,12 @@
 //
-//  SignOutUseCase.swift
-//  Domain
+//  SignOutUseCaseImpl.swift
+//  DomainImpl
 //
 //  Created by Sangjin Lee
 //
 
-public protocol SignOutUseCase {
-    func execute(provider: AuthProvider) async throws
-}
-
 import Core
+import Domain
 
 public final class SignOutUseCaseImpl: SignOutUseCase {
 

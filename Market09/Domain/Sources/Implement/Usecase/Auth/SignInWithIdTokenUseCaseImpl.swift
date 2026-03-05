@@ -1,15 +1,12 @@
 //
-//  SignInWithIdTokenUseCase.swift
-//  Domain
+//  SignInWithIdTokenUseCaseImpl.swift
+//  DomainImpl
 //
 //  Created by Sangjin Lee
 //
 
 import Core
-
-public protocol SignInWithIdTokenUseCase {
-    func execute(provider: AuthProvider, idToken: String, nonce: String?) async throws -> AuthToken
-}
+import Domain
 
 public final class SignInWithIdTokenUseCaseImpl: SignInWithIdTokenUseCase {
 

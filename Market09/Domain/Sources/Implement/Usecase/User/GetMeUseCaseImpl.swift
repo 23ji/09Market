@@ -1,15 +1,12 @@
 //
-//  GetMeUseCase.swift
-//  Domain
+//  GetMeUseCaseImpl.swift
+//  DomainImpl
 //
 //  Created by Sangjin Lee
 //
 
 import Core
-
-public protocol GetMeUseCase {
-    func execute() async throws -> User?
-}
+import Domain
 
 public final class GetMeUseCaseImpl: GetMeUseCase {
 

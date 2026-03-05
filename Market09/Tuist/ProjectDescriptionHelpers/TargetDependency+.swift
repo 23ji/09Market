@@ -43,9 +43,17 @@ extension TargetDependency {
 
 public enum Module: String {
     case domain = "Domain"
+    case domainImpl = "DomainImpl"
     case core = "Core"
     case data = "Data"
     case shared = "Shared"
+
+    var projectPath: String {
+        switch self {
+        case .domainImpl: return "Domain"
+        default: return rawValue
+        }
+    }
 }
 
 extension TargetDependency {
@@ -53,7 +61,7 @@ extension TargetDependency {
     public static func module(_ module: Module) -> TargetDependency {
         .project(
             target: module.rawValue,
-            path: .relativeToRoot("\(module.rawValue)")
+            path: .relativeToRoot(module.projectPath)
         )
     }
 }

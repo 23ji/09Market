@@ -1,11 +1,12 @@
 //
 //  DomainAssembly.swift
-//  Domain
+//  DomainImpl
 //
 //  Created by Sangjin Lee
 //
 
 import Core
+import Domain
 import Swinject
 
 public final class DomainAssembly: Assembly {
@@ -19,6 +20,7 @@ public final class DomainAssembly: Assembly {
         container.register(UserStore.self) { _ in
             UserStore()
         }.inObjectScope(.container)
+        
 
         // MARK: - Auth
 
@@ -43,6 +45,7 @@ public final class DomainAssembly: Assembly {
                 userStore: resolver.resolve(UserStore.self)!
             )
         }.inObjectScope(.container)
+        
 
         // MARK: - User
 

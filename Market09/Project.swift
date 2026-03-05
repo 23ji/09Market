@@ -67,6 +67,7 @@ let project = Project(
             ],
             dependencies: [
                 .module(.domain),
+                .module(.domainImpl),
                 .module(.core),
                 .module(.data),
                 .feature(.home, type: .interface),

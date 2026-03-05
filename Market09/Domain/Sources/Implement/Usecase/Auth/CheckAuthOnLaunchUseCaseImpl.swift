@@ -1,18 +1,15 @@
 //
-//  CheckAuthOnLaunchUseCase.swift
-//  Domain
+//  CheckAuthOnLaunchUseCaseImpl.swift
+//  DomainImpl
 //
 //  Created by Sangjin Lee
 //
 
 import Core
-
-public protocol CheckAuthOnLaunchUseCase {
-    func execute() async throws -> AuthState
-}
+import Domain
 
 public final class CheckAuthOnLaunchUseCaseImpl: CheckAuthOnLaunchUseCase {
-    
+
     private let authRepository: AuthRepository
     private let userRepository: UserRepository
     private let userStore: UserStore
