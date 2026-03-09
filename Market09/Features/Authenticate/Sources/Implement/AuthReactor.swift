@@ -7,13 +7,19 @@
 
 import Core
 import Domain
+import Shared_DI
 import Shared_ReactiveX
 
-final class AuthReactor: Reactor {
+final class AuthReactor: Reactor, FactoryModule {
+
+    struct Dependency {
+        let checkAuthOnLaunchUseCase: CheckAuthOnLaunchUseCase
+    }
+
     enum Action {
         case checkAuth
     }
-    
+
     enum Mutation {
         case setAuthState(AuthState)
         case setError(AppError)
@@ -23,13 +29,12 @@ final class AuthReactor: Reactor {
         var authState: AuthState? = nil
         var error: AppError? = nil
     }
-    
+
     let initialState: State = State()
+    private let dependency: Dependency
 
-    private let checkAuthOnLaunchUseCase: CheckAuthOnLaunchUseCase
-
-    init(checkAuthOnLaunchUseCase: CheckAuthOnLaunchUseCase) {
-        self.checkAuthOnLaunchUseCase = checkAuthOnLaunchUseCase
+    required init(dependency: Dependency, payload: Void) {
+        self.dependency = dependency
     }
 }
 
@@ -37,7 +42,7 @@ extension AuthReactor {
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .checkAuth:
-            return Observable.task { try await self.checkAuthOnLaunchUseCase.execute() }
+            return Observable.task { try await self.dependency.checkAuthOnLaunchUseCase.execute() }
                 .map { Mutation.setAuthState($0) }
                 .catch { error in
                     let appError = (error as? AppError) ?? .unknown(message: error.localizedDescription)

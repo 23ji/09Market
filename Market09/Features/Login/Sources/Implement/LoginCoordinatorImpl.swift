@@ -9,6 +9,7 @@ import UIKit
 
 import Core
 import Login
+import Shared_DI
 import Shared_ReactiveX
 
 final class LoginCoordinatorImpl: LoginCoordinator {
@@ -26,7 +27,7 @@ final class LoginCoordinatorImpl: LoginCoordinator {
     
     // MARK: - Reactor
     
-    private let loginReactor: LoginReactor
+    private let viewController: LoginViewController
     private let disposeBag = DisposeBag()
     
     
@@ -34,21 +35,20 @@ final class LoginCoordinatorImpl: LoginCoordinator {
     
     public init(
         navigationController: UINavigationController,
-        loginReactor: LoginReactor
+        viewController: LoginViewController
     ) {
         self.navigationController = navigationController
-        self.loginReactor = loginReactor
+        self.viewController = viewController
     }
     
     
     // MARK: - Login
     
     public func start() {
-        let viewController = LoginViewController()
-        viewController.reactor = self.loginReactor
+        guard let reactor = self.viewController.reactor else { return }
 
         // 로그인 성공 시 delegate 호출
-        self.loginReactor.state.map(\.isLoginCompleted)
+        reactor.state.map(\.isLoginCompleted)
             .distinctUntilChanged()
             .filter { $0 }
             .take(1)
@@ -58,6 +58,6 @@ final class LoginCoordinatorImpl: LoginCoordinator {
             })
             .disposed(by: self.disposeBag)
 
-        self.navigationController.pushViewController(viewController, animated: true)
+        self.navigationController.pushViewController(self.viewController, animated: true)
     }
 }

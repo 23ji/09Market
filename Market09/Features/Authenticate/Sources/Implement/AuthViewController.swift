@@ -1,5 +1,5 @@
 //
-//  SplashViewController.swift
+//  AuthViewController.swift
 //  Authenticate
 //
 //  Created by Sangjin Lee
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class SplashViewController: UIViewController {
+final class AuthViewController: UIViewController {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "스플래시"

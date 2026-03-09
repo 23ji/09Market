@@ -41,12 +41,12 @@ final class AuthCoordinatorImpl: AuthCoordinator {
     }
     
     
-    // MARK: - Launch the App(Splash)
-    
+    // MARK: - Launch the App
+
     public func start() {
-        // 1. SplashViewController 표시
-        let splashVC = SplashViewController()
-        self.navigationController.setViewControllers([splashVC], animated: false)
+        // 1. Splash 표시
+        let viewController = AuthViewController()
+        self.navigationController.setViewControllers([viewController], animated: false)
 
         // 2. authState 확정 시 delegate 호출
         self.authReactor.state.map(\.authState)
@@ -58,14 +58,14 @@ final class AuthCoordinatorImpl: AuthCoordinator {
             })
             .disposed(by: self.disposeBag)
 
-        // 3. 에러 시 ErrorDialog 표시 (splashVC 위에 표시)
+        // 3. 에러 시 ErrorDialog 표시 (authVC 위에 표시)
         self.authReactor.state.map(\.error)
             .compactMap { $0 }
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] error in
                 guard let self else { return }
                 ErrorDialog.show(
-                    on: splashVC,
+                    on: viewController,
                     error: error,
                     retryAction: { self.authReactor.action.onNext(.checkAuth) }
                 )

@@ -9,14 +9,28 @@ import UIKit
 
 import Core
 import DesignSystem
+import Shared_DI
 import Shared_ReactiveX
 import Util
 
 import GoogleSignIn
 
-final class LoginViewController: UIViewController {
+final class LoginViewController: UIViewController, FactoryModule {
+    
+    struct Dependency {
+        let reactor: LoginReactor
+    }
+    
     var disposeBag = DisposeBag()
-
+    
+    required init(dependency: Dependency, payload: Void) {
+        super.init(nibName: nil, bundle: nil)
+        defer { self.reactor = dependency.reactor }
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     // MARK: - UI
 
