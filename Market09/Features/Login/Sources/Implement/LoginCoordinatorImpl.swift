@@ -5,15 +5,17 @@
 //  Created by Sangjin Lee
 //
 
-import Core
-import Login
-import Shared_ReactiveX
 import UIKit
 
+import Core
+import Login
+import Shared_DI
+import Shared_ReactiveX
+
 final class LoginCoordinatorImpl: LoginCoordinator {
-    
+
     // MARK: - Coordinator Protocol
-    
+
     public var childCoordinators: [Coordinator] = []
     public let navigationController: UINavigationController
     
@@ -25,7 +27,7 @@ final class LoginCoordinatorImpl: LoginCoordinator {
     
     // MARK: - Reactor
     
-    private let loginReactor: LoginReactor
+    private let viewController: LoginViewController
     private let disposeBag = DisposeBag()
     
     
@@ -33,21 +35,20 @@ final class LoginCoordinatorImpl: LoginCoordinator {
     
     public init(
         navigationController: UINavigationController,
-        loginReactor: LoginReactor
+        viewController: LoginViewController
     ) {
         self.navigationController = navigationController
-        self.loginReactor = loginReactor
+        self.viewController = viewController
     }
     
     
     // MARK: - Login
     
     public func start() {
-        let viewController = LoginViewController()
-        viewController.reactor = loginReactor
-        
+        guard let reactor = self.viewController.reactor else { return }
+
         // 로그인 성공 시 delegate 호출
-        loginReactor.state.map(\.isLoginCompleted)
+        reactor.state.map(\.isLoginCompleted)
             .distinctUntilChanged()
             .filter { $0 }
             .take(1)
@@ -55,8 +56,8 @@ final class LoginCoordinatorImpl: LoginCoordinator {
             .subscribe(onNext: { [weak self] _ in
                 self?.delegate?.loginDidComplete()
             })
-            .disposed(by: disposeBag)
-        
-        navigationController.pushViewController(viewController, animated: true)
+            .disposed(by: self.disposeBag)
+
+        self.navigationController.pushViewController(self.viewController, animated: true)
     }
 }

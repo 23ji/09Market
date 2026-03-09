@@ -7,10 +7,17 @@
 
 import Core
 import Domain
+import Shared_DI
 import Shared_ReactiveX
 
-final class ProfileReactor: Reactor {
-    
+final class ProfileReactor: Reactor, FactoryModule {
+
+    struct Dependency {
+        let signOutUseCase: SignOutUseCase
+        let deleteAccountUseCase: DeleteAccountUseCase
+        let userStore: UserStore
+    }
+
     enum Action {
         case viewDidAppear
         case loginButtonTapped
@@ -36,26 +43,17 @@ final class ProfileReactor: Reactor {
         @Pulse var error: AppError?
     }
 
-    let initialState = State()
+    let initialState: State = State()
+    private let dependency: Dependency
 
-    private let signOutUseCase: SignOutUseCase
-    private let deleteAccountUseCase: DeleteAccountUseCase
-    private let userStore: UserStore
-
-    init(
-        signOutUseCase: SignOutUseCase,
-        deleteAccountUseCase: DeleteAccountUseCase,
-        userStore: UserStore
-    ) {
-        self.signOutUseCase = signOutUseCase
-        self.deleteAccountUseCase = deleteAccountUseCase
-        self.userStore = userStore
+    required init(dependency: Dependency, payload: Void) {
+        self.dependency = dependency
     }
 }
 
 extension ProfileReactor {
     func transform(mutation: Observable<Mutation>) -> Observable<Mutation> {
-        let userMutation = userStore.currentUser
+        let userMutation = self.dependency.userStore.currentUser
             .map { Mutation.setUser($0) }
             .asObservable()
         return .merge(mutation, userMutation)
@@ -73,12 +71,12 @@ extension ProfileReactor {
             return .just(.setLoginRequired)
 
         case .logoutButtonTapped:
-            guard let provider = userStore.currentUser.value?.provider else {
+            guard let provider = self.dependency.userStore.currentUser.value?.provider else {
                 return .just(.setError(AppError.auth(.providerFailed)))
             }
             return Observable.concat([
                 .just(.setLoading(true)),
-                Observable.task { try await self.signOutUseCase.execute(provider: provider) }
+                Observable.task { try await self.dependency.signOutUseCase.execute(provider: provider) }
                     .map { _ in Mutation.setUser(nil) }
                     .catch { .just(.setError($0 as? AppError)) },
                 .just(.setLoading(false))
@@ -90,7 +88,7 @@ extension ProfileReactor {
             // TODO: 추후 계정 삭제 API 완성 시 해당 주석 해제
 //            return Observable.concat([
 //                .just(.setLoading(true)),
-//                Observable.task { try await self.deleteAccountUseCase.execute() }
+//                Observable.task { try await self.dependency.deleteAccountUseCase.execute() }
 //                    .map { _ in Mutation.setUser(nil) }
 //                    .catch { .just(.setError($0 as? AppError)) },
 //                .just(.setLoading(false))

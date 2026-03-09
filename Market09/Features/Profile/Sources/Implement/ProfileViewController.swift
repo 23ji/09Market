@@ -5,18 +5,34 @@
 //  Created by Sangjin Lee
 //
 
+import UIKit
+
 import Core
 import DesignSystem
+import Shared_DI
 import Shared_ReactiveX
-import UIKit
 import Util
 
-final class ProfileViewController: UIViewController {
-    
+final class ProfileViewController: UIViewController, FactoryModule {
+
+    struct Dependency {
+        let reactor: ProfileReactor
+    }
+
     var disposeBag = DisposeBag()
-    
+
+    required init(dependency: Dependency, payload: Void) {
+        super.init(nibName: nil, bundle: nil)
+        defer { self.reactor = dependency.reactor }
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+
     // MARK: - UI
-    
+
     private let loginButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(Strings.Profile.login, for: .normal)
@@ -61,30 +77,30 @@ final class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        self.view.backgroundColor = .systemBackground
         setupLayout()
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        reactor?.action.onNext(.viewDidAppear)
+        self.reactor?.action.onNext(.viewDidAppear)
     }
 }
 
 extension ProfileViewController: View {
-    
+
     // MARK: - Bind
 
     func bind(reactor: ProfileReactor) {
         
         // MARK: - Action
         
-        loginButton.rx.tap
+        self.loginButton.rx.tap
             .map { Reactor.Action.loginButtonTapped }
             .bind(to: reactor.action)
-            .disposed(by: disposeBag)
+            .disposed(by: self.disposeBag)
 
-        logoutButton.rx.tap
+        self.logoutButton.rx.tap
             .subscribe(onNext: { [weak self] in
                 guard let self else { return }
                 ConfirmDialog.show(
@@ -95,12 +111,12 @@ extension ProfileViewController: View {
                     }
                 )
             })
-            .disposed(by: disposeBag)
+            .disposed(by: self.disposeBag)
 
-        deleteAccountButton.rx.tap
+        self.deleteAccountButton.rx.tap
             .map { Reactor.Action.deleteAccountTapped }
             .bind(to: reactor.action)
-            .disposed(by: disposeBag)
+            .disposed(by: self.disposeBag)
 
         
         // MARK: - State
@@ -116,7 +132,7 @@ extension ProfileViewController: View {
                     LoadingIndicator.hide(from: self.view)
                 }
             })
-            .disposed(by: disposeBag)
+            .disposed(by: self.disposeBag)
 
         reactor.state.map(\.isLoggedIn)
             .distinctUntilChanged()
@@ -128,7 +144,7 @@ extension ProfileViewController: View {
                 self?.logoutButton.isHidden = !isLoggedIn
                 self?.deleteAccountButton.isHidden = !isLoggedIn
             })
-            .disposed(by: disposeBag)
+            .disposed(by: self.disposeBag)
 
         reactor.state.map(\.user)
             .distinctUntilChanged { $0?.id == $1?.id }
@@ -137,7 +153,7 @@ extension ProfileViewController: View {
                 self?.nicknameLabel.text = user?.nickname ?? "사용자"
                 self?.providerLabel.text = user?.provider.rawValue
             })
-            .disposed(by: disposeBag)
+            .disposed(by: self.disposeBag)
 
         reactor.pulse(\.$error)
             .compactMap { $0 }
@@ -152,27 +168,27 @@ extension ProfileViewController: View {
                     }
                 )
             })
-            .disposed(by: disposeBag)
+            .disposed(by: self.disposeBag)
     }
 }
 
 extension ProfileViewController {
-    
+
     // MARK: - Layout
 
     private func setupLayout() {
         let stackView = UIStackView(arrangedSubviews: [
-            nicknameLabel, providerLabel, loginButton, logoutButton, deleteAccountButton
+            self.nicknameLabel, self.providerLabel, self.loginButton, self.logoutButton, self.deleteAccountButton
         ])
         stackView.axis = .vertical
         stackView.spacing = 16
         stackView.alignment = .center
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
-        view.addSubview(stackView)
+        self.view.addSubview(stackView)
         NSLayoutConstraint.activate([
-            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            stackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            stackView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
         ])
     }
 }

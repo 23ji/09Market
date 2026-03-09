@@ -7,10 +7,15 @@
 
 import Core
 import Domain
+import Shared_DI
 import Shared_ReactiveX
 
-final class LoginReactor: Reactor {
-
+final class LoginReactor: Reactor, FactoryModule {
+    
+    struct Dependency {
+        let signInWithIdTokenUseCase: SignInWithIdTokenUseCase
+    }
+    
     enum Action {
         case googleLoginCompleted(idToken: String)
         case googleLoginFailed
@@ -30,12 +35,11 @@ final class LoginReactor: Reactor {
         @Pulse var error: AppError?
     }
     
-    let initialState = State()
+    let initialState: State = State()
+    private let dependency: Dependency
     
-    private let signInWithIdTokenUseCase: SignInWithIdTokenUseCase
-    
-    init(signInWithIdTokenUseCase: SignInWithIdTokenUseCase) {
-        self.signInWithIdTokenUseCase = signInWithIdTokenUseCase
+    required init(dependency: Dependency, payload: Void) {
+        self.dependency = dependency
     }
 }
 
@@ -46,7 +50,7 @@ extension LoginReactor {
             return Observable.concat([
                 .just(.setLoading(true)),
                 Observable.task {
-                    try await self.signInWithIdTokenUseCase.execute(
+                    try await self.dependency.signInWithIdTokenUseCase.execute(
                         provider: .google,
                         idToken: idToken,
                         nonce: nil
@@ -69,7 +73,7 @@ extension LoginReactor {
             return Observable.concat([
                 .just(.setLoading(true)),
                 Observable.task {
-                    try await self.signInWithIdTokenUseCase.execute(
+                    try await self.dependency.signInWithIdTokenUseCase.execute(
                         provider: .apple,
                         idToken: idToken,
                         nonce: nonce

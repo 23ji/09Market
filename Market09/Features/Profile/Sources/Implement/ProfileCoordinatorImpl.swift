@@ -5,10 +5,11 @@
 //  Created by Sangjin Lee
 //
 
+import UIKit
+
 import Core
 import Profile
 import Shared_ReactiveX
-import UIKit
 
 final class ProfileCoordinatorImpl: ProfileCoordinator {
     
@@ -23,33 +24,32 @@ final class ProfileCoordinatorImpl: ProfileCoordinator {
     public weak var delegate: ProfileCoordinatorDelegate?
     
     
-    // MARK: - Reactor
-    
-    private let reactor: ProfileReactor
+    // MARK: - Properties
+
+    private let viewController: ProfileViewController
     private let disposeBag = DisposeBag()
-    
+
 
     // MARK: - Init
 
-    public init(navigationController: UINavigationController, reactor: ProfileReactor) {
+    public init(navigationController: UINavigationController, viewController: ProfileViewController) {
         self.navigationController = navigationController
-        self.reactor = reactor
+        self.viewController = viewController
     }
-    
+
 
     // MARK: - Start
 
     public func start() {
-        let viewController = ProfileViewController()
-        viewController.reactor = reactor
-        
+        guard let reactor = self.viewController.reactor else { return }
+
         reactor.pulse(\.$loginRequested)
             .compactMap { $0 }
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 self?.delegate?.profileDidRequestLogin()
             })
-            .disposed(by: disposeBag)
+            .disposed(by: self.disposeBag)
 
         reactor.pulse(\.$loginRequired)
             .compactMap { $0 }
@@ -57,7 +57,7 @@ final class ProfileCoordinatorImpl: ProfileCoordinator {
             .subscribe(onNext: { [weak self] _ in
                 self?.delegate?.profileDidRequireLogin()
             })
-            .disposed(by: disposeBag)
-        navigationController.setViewControllers([viewController], animated: false)
+            .disposed(by: self.disposeBag)
+        self.navigationController.setViewControllers([self.viewController], animated: false)
     }
 }
