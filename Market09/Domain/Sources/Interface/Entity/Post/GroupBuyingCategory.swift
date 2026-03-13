@@ -1,11 +1,11 @@
 //
-//  Category.swift
+//  GroupBuyingCategory.swift
 //  Domain
 //
 //  Created by Sangjin Lee
 //
 
-public enum Category: String, CaseIterable {
+public enum GroupBuyingCategory: String, CaseIterable {
     case beauty = "뷰티"
     case food = "푸드"
     case fashion = "패션"

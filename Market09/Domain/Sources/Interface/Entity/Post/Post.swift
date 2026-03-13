@@ -11,7 +11,7 @@ public struct Post {
     public let id: String
     public let productName: String
     public let price: Int?
-    public let category: Category
+    public let category: GroupBuyingCategory
     public let imageUrls: [String]?
     public let groupBuyingStart: Date
     public let groupBuyingEnd: Date
@@ -25,7 +25,7 @@ public struct Post {
         id: String,
         productName: String,
         price: Int?,
-        category: Category,
+        category: GroupBuyingCategory,
         imageUrls: [String]?,
         groupBuyingStart: Date,
         groupBuyingEnd: Date,

@@ -15,7 +15,7 @@ enum PostMapper {
             id: response.id,
             productName: response.productName,
             price: response.price,
-            category: Category(rawValue: response.category) ?? .beauty,
+            category: GroupBuyingCategory(rawValue: response.category) ?? .beauty,
             imageUrls: response.imageUrls,
             groupBuyingStart: dateFormatter.date(from: response.groupBuyingStart) ?? Date(),
             groupBuyingEnd: dateFormatter.date(from: response.groupBuyingEnd) ?? Date(),
