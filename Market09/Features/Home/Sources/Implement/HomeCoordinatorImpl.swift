@@ -9,8 +9,10 @@ import UIKit
 
 import Core
 import Home
+import Shared_DI
+import Shared_ReactiveX
 
-public final class HomeCoordinatorImpl: HomeCoordinator {
+final class HomeCoordinatorImpl: HomeCoordinator {
 
     // MARK: - Coordinator Protocol
 
@@ -18,21 +20,32 @@ public final class HomeCoordinatorImpl: HomeCoordinator {
     public let navigationController: UINavigationController
 
 
-    // MARK: - HomeCoordinator Protocol
+    // MARK: - Delegate
 
     public weak var delegate: HomeCoordinatorDelegate?
+    
+    
+    // MARK: - Reactor
+    
+    private let viewController: HomeViewController
+    private let disposeBag = DisposeBag()
 
 
     // MARK: - Init
 
-    public init(navigationController: UINavigationController) {
+    public init(
+        navigationController: UINavigationController,
+        viewController: HomeViewController
+    ) {
         self.navigationController = navigationController
+        self.viewController = viewController
     }
 
 
     // MARK: - Start
 
     public func start() {
-        // TODO: ViewController 생성 및 push
+        guard let reactor = self.viewController.reactor else { return }
+        self.navigationController.pushViewController(self.viewController, animated: true)
     }
 }
