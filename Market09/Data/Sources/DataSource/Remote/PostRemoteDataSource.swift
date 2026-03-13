@@ -7,7 +7,7 @@
 
 import Foundation
 
-import Core
+import AppCore
 
 protocol PostRemoteDataSource {
     /// GET — 공동구매 게시글 목록 조회

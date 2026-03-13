@@ -7,7 +7,7 @@
 
 import Foundation
 
-import Core
+import AppCore
 
 // MARK: - APIClient Protocol
 

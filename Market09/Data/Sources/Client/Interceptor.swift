@@ -7,7 +7,7 @@
 
 import Foundation
 
-import Core
+import AppCore
 
 final class Interceptor: @unchecked Sendable {
     private let localDataSource: AuthLocalDataSource

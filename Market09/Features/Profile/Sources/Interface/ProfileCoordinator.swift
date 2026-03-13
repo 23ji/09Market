@@ -5,7 +5,7 @@
 //  Created by Sangjin Lee
 //
 
-import Core
+import AppCore
 
 public protocol ProfileCoordinator: Coordinator {
     var delegate: ProfileCoordinatorDelegate? { get set }

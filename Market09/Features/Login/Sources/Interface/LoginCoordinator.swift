@@ -5,7 +5,7 @@
 //  Created by Sangjin Lee
 //
 
-import Core
+import AppCore
 
 public protocol LoginCoordinator: Coordinator {
     var delegate: LoginCoordinatorDelegate? { get set }

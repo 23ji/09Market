@@ -44,7 +44,7 @@ extension TargetDependency {
 public enum Module: String {
     case domain = "Domain"
     case domainImpl = "DomainImpl"
-    case core = "Core"
+    case core = "AppCore"
     case data = "Data"
     case sharedReactiveX = "Shared_ReactiveX"
     case sharedDI = "Shared_DI"

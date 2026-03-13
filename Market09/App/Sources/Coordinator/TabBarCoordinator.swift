@@ -7,7 +7,7 @@
 
 import UIKit
 
-import Core
+import AppCore
 import Home
 import Profile
 import Shared_DI

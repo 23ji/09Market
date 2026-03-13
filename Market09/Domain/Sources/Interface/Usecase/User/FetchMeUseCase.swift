@@ -5,7 +5,7 @@
 //  Created by Sangjin Lee
 //
 
-import Core
+import AppCore
 
 public protocol FetchMeUseCase {
     func execute() async throws -> User?

@@ -7,7 +7,7 @@
 
 import UIKit
 
-import Core
+import AppCore
 import DesignSystem
 import Domain
 import Shared_DI

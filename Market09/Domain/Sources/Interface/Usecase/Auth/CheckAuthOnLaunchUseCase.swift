@@ -5,7 +5,7 @@
 //  Created by Sangjin Lee
 //
 
-import Core
+import AppCore
 
 public protocol CheckAuthOnLaunchUseCase {
     func execute() async throws -> AuthState

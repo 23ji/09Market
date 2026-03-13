@@ -7,7 +7,7 @@
 
 import Foundation
 
-import Core
+import AppCore
 
 enum NetworkErrorMapper {
     static func map(_ error: URLError) -> AppError {

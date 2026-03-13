@@ -7,7 +7,7 @@
 
 import Foundation
 
-import Core
+import AppCore
 
 protocol UserRemoteDataSource {
     /// GET /me — 유저  조회
