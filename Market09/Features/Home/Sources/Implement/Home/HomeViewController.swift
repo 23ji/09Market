@@ -17,60 +17,65 @@ import Shared_UI
 import Kingfisher
 
 final class HomeViewController: UIViewController, FactoryModule {
-    
+
     // MARK: - Init
-    
+
     struct Dependency {
         let reactor: HomeReactor
     }
-    
+
     var disposeBag = DisposeBag()
-    
+
     required init(dependency: Dependency, payload: Void) {
         super.init(nibName: nil, bundle: nil)
         defer { self.reactor = dependency.reactor }
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    
+
+
     // MARK: - UI
-    
+
     private let searchBar = UISearchBar().then {
         $0.placeholder = "브랜드, 상품 검색"
         $0.searchBarStyle = .minimal
     }
-    
-    private lazy var dataSource = RxCollectionViewSectionedReloadDataSource<HomeSectionModel>(
+
+    private lazy var dataSource = RxCollectionViewSectionedAnimatedDataSource<HomeSectionModel>(
+        animationConfiguration: .init(insertAnimation: .none, reloadAnimation: .none, deleteAnimation: .none),
         configureCell: { _, collectionView, indexPath, item in
             switch item {
             case .category(let category, let isSelected):
                 guard let cell = collectionView.dequeueReusableCell(
                     withReuseIdentifier: "CategoryCell", for: indexPath
-                ) as? CategoryChipCell else { return UICollectionViewCell() }
+                ) as? HomeCategoryChipCell else { return UICollectionViewCell() }
 
                 cell.configure(
                     dependency: .init(),
-                    payload: .init(category: category, isSelected: isSelected)
+                    payload: .init(
+                        category: category,
+                        isSelected: isSelected
+                    )
                 )
 
                 return cell
 
             case .top10Banner:
-                let cell = collectionView.dequeueReusableCell(
+                guard let cell = collectionView.dequeueReusableCell(
                     withReuseIdentifier: "BannerCell", for: indexPath
-                )
-                cell.contentView.backgroundColor = .systemOrange
-                    .withAlphaComponent(0.2)
+                ) as? HomeTop10BannerCell else { return UICollectionViewCell() }
+
+                cell.configure(dependency: .init(), payload: .init())
                 return cell
 
-            case .post:
-                let cell = collectionView.dequeueReusableCell(
+            case .post(let post):
+                guard let cell = collectionView.dequeueReusableCell(
                     withReuseIdentifier: "PostCell", for: indexPath
-                )
-                cell.contentView.backgroundColor = .systemGray6
+                ) as? HomePostCardCell else { return UICollectionViewCell() }
+
+                cell.configure(dependency: .init(), payload: .init(post: post))
                 return cell
             }
         }
@@ -82,13 +87,13 @@ final class HomeViewController: UIViewController, FactoryModule {
             collectionViewLayout: HomeCollectionViewLayout.create()
         )
         cv.backgroundColor = .systemBackground
-        cv.register(CategoryChipCell.self, forCellWithReuseIdentifier: "CategoryCell")
-        cv.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "BannerCell")
-        cv.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "PostCell")
+        cv.register(HomeCategoryChipCell.self, forCellWithReuseIdentifier: "CategoryCell")
+        cv.register(HomeTop10BannerCell.self, forCellWithReuseIdentifier: "BannerCell")
+        cv.register(HomePostCardCell.self, forCellWithReuseIdentifier: "PostCell")
         return cv
     }()
-    
-    
+
+
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
@@ -97,13 +102,18 @@ final class HomeViewController: UIViewController, FactoryModule {
         setupLayout()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+
     private func setupLayout() {
         self.view.addSubview(self.searchBar)
         self.view.addSubview(self.collectionView)
 
         self.searchBar.snp.makeConstraints { make in
-            make.top.equalTo(self.view.safeAreaLayoutGuide)
-            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(self.view.safeAreaLayoutGuide).offset(4)
+            make.leading.trailing.equalToSuperview().inset(8)
         }
 
         self.collectionView.snp.makeConstraints { make in
@@ -118,10 +128,10 @@ extension HomeViewController: View {
 
         // MARK: - Action
 
-        Observable.just(Reactor.Action.viewDidLoad)
+        Observable.just(Reactor.Action.fetchPostList)
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
-        
+
         self.collectionView.rx.itemSelected
             .filter { $0.section == 0 }
             .withLatestFrom(reactor.state.map(\.sections)) { indexPath, sections in
@@ -131,6 +141,17 @@ extension HomeViewController: View {
                 return category
             }
             .bind(to: reactor.action.mapObserver { .selectCategory($0) })
+            .disposed(by: self.disposeBag)
+
+        self.collectionView.rx.willDisplayCell
+            .filter { $0.at.section == 2 }
+            .withLatestFrom(reactor.state) { event, state in
+                return event.at.item >= state.posts.count - 3
+            }
+            .distinctUntilChanged()
+            .filter { $0 }
+            .map { _ in Reactor.Action.loadNextPage }
+            .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
 
         // MARK: - State
