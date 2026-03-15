@@ -5,7 +5,7 @@
 //  Created by Sangjin Lee
 //
 
-import Core
+import AppCore
 
 public protocol SignOutUseCase {
     func execute(provider: AuthProvider) async throws

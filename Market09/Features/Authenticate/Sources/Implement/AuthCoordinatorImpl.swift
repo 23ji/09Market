@@ -7,8 +7,8 @@
 
 import UIKit
 
+import AppCore
 import Authenticate
-import Core
 import Shared_ReactiveX
 
 final class AuthCoordinatorImpl: AuthCoordinator {

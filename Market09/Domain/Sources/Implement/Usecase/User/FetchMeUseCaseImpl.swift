@@ -1,14 +1,14 @@
 //
-//  GetMeUseCaseImpl.swift
+//  FetchMeUseCaseImpl.swift
 //  DomainImpl
 //
 //  Created by Sangjin Lee
 //
 
-import Core
+import AppCore
 import Domain
 
-public final class GetMeUseCaseImpl: GetMeUseCase {
+public final class FetchMeUseCaseImpl: FetchMeUseCase {
     private let userRepository: UserRepository
 
     public init(userRepository: UserRepository) {
@@ -16,6 +16,6 @@ public final class GetMeUseCaseImpl: GetMeUseCase {
     }
 
     public func execute() async throws -> User? {
-        return try await self.userRepository.getMe()
+        return try await self.userRepository.fetchMe()
     }
 }

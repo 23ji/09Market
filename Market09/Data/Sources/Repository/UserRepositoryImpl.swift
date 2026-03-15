@@ -5,9 +5,7 @@
 //  Created by Sangjin Lee
 //
 
-import Foundation
-
-import Core
+import AppCore
 import Domain
 
 final class UserRepositoryImpl: UserRepository {
@@ -17,8 +15,8 @@ final class UserRepositoryImpl: UserRepository {
         self.remoteDataSource = remoteDataSource
     }
 
-    func getMe() async throws -> User? {
-        return try await self.remoteDataSource.getMe()
+    func fetchMe() async throws -> User? {
+        return try await self.remoteDataSource.fetchMe()
             .map(UserMapper.toUserEntity)
     }
 }

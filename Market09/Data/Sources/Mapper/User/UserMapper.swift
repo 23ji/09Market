@@ -5,7 +5,7 @@
 //  Created by Sangjin Lee
 //
 
-import Core
+import AppCore
 
 enum UserMapper {
     static func toUserEntity(_ response: UserResponse) -> User {

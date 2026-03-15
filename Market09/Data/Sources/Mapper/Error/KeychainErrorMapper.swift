@@ -5,7 +5,7 @@
 //  Created by Sangjin Lee
 //
 
-import Core
+import AppCore
 
 enum KeychainErrorMapper {
     static func map(_ error: KeychainError) -> AppError {

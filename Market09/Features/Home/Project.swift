@@ -20,7 +20,11 @@ let project = Project(
         dependencies: [
             .module(.core),
             .module(.domain),
+            .module(.designSystem),
             .module(.sharedDI),
+            .module(.sharedUI),
+            .module(.sharedReactiveX),
+            .external(name: "Kingfisher")
         ]
     )
 )

@@ -7,7 +7,7 @@
 
 import UIKit
 
-import Core
+import AppCore
 import DesignSystem
 import Shared_DI
 import Shared_ReactiveX

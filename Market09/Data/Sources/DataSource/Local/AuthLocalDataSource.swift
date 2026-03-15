@@ -7,7 +7,7 @@
 
 import Foundation
 
-import Core
+import AppCore
 import Domain
 
 public protocol AuthLocalDataSource {

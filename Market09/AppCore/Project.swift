@@ -1,6 +1,6 @@
 //
 //  Project.swift
-//  Core
+//  AppCore
 //
 //  Created by Sangjin Lee
 //
@@ -9,10 +9,10 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project(
-    name: "Core",
+    name: "AppCore",
     targets: [
         .target(
-            name: "Core",
+            name: "AppCore",
             destinations: [.iPhone],
             product: .staticFramework,
             bundleId: "com.ios.market09.core",
@@ -28,13 +28,13 @@ let project = Project(
             ]
         ),
         .target(
-            name: "CoreTests",
+            name: "AppCoreTests",
             destinations: [.iPhone],
             product: .unitTests,
             bundleId: "com.ios.market09.coreTests",
             deploymentTargets: .iOS("17.0"),
             sources: ["Tests/**"],
-            dependencies: [.target(name: "Core")]
+            dependencies: [.target(name: "AppCore")]
         ),
     ]
 )

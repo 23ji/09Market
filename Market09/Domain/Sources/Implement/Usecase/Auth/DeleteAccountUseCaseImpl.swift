@@ -5,7 +5,7 @@
 //  Created by Sangjin Lee
 //
 
-import Core
+import AppCore
 import Domain
 
 public final class DeleteAccountUseCaseImpl: DeleteAccountUseCase {
