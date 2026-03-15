@@ -89,6 +89,11 @@ extension HomeReactor {
         switch mutation {
         case .setLoading(let isLoading):
             newState.isLoading = isLoading
+            newState.sections = self.buildSections(
+                selectedCategory: newState.selectedCategory,
+                posts: newState.posts,
+                isLoading: newState.isLoading
+            )
 
         case .setFetchCompleted(let page):
             if page.page == 1 {
@@ -101,14 +106,17 @@ extension HomeReactor {
             newState.hasNextPage = newState.posts.count < page.total
             newState.sections = self.buildSections(
                 selectedCategory: newState.selectedCategory,
-                posts: newState.posts
+                posts: newState.posts,
+                isLoading: newState.isLoading
             )
         
         case .setSelectedCategory(let category):
             newState.selectedCategory = category
+            newState.posts = []
             newState.sections = self.buildSections(
                 selectedCategory: newState.selectedCategory,
-                posts: newState.posts
+                posts: newState.posts,
+                isLoading: newState.isLoading
             )
 
         case .setError(let error):
@@ -143,7 +151,8 @@ extension HomeReactor {
 extension HomeReactor {
     private func buildSections(
         selectedCategory: GroupBuyingCategory?,
-        posts: [Post]
+        posts: [Post],
+        isLoading: Bool
     ) -> [HomeSectionModel] {
         var categories: [HomeSectionItem] = [
             .category(nil, selectedCategory == nil),
@@ -152,7 +161,12 @@ extension HomeReactor {
             .category(category, category == selectedCategory)
         }
 
-        let postItems: [HomeSectionItem] = posts.map { .post($0) }
+        let postItems: [HomeSectionItem]
+        if isLoading && posts.isEmpty {
+            postItems = (0..<5).map { .skeleton($0) }
+        } else {
+            postItems = posts.map { .post($0) }
+        }
 
         return [
             .category(items: categories),

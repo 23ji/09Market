@@ -77,6 +77,13 @@ final class HomeViewController: UIViewController, FactoryModule {
 
                 cell.configure(dependency: .init(), payload: .init(post: post))
                 return cell
+                
+            case .skeleton(_):
+                guard let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: "SkeletonCell", for: indexPath
+                ) as? HomePostSkeletonCell else { return UICollectionViewCell() }
+                
+                return cell
             }
         }
     )
@@ -90,6 +97,7 @@ final class HomeViewController: UIViewController, FactoryModule {
         cv.register(HomeCategoryChipCell.self, forCellWithReuseIdentifier: "CategoryCell")
         cv.register(HomeTop10BannerCell.self, forCellWithReuseIdentifier: "BannerCell")
         cv.register(HomePostCardCell.self, forCellWithReuseIdentifier: "PostCell")
+        cv.register(HomePostSkeletonCell.self, forCellWithReuseIdentifier: "SkeletonCell")
         return cv
     }()
 
@@ -157,6 +165,7 @@ extension HomeViewController: View {
         // MARK: - State
 
         reactor.state.map(\.sections)
+            .observe(on: MainScheduler.asyncInstance)
             .bind(to: self.collectionView.rx.items(dataSource: self.dataSource))
             .disposed(by: self.disposeBag)
     }
