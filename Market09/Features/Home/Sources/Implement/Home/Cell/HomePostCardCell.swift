@@ -120,7 +120,7 @@ final class HomePostCardCell: UICollectionViewCell, ConfiguratorModule {
         $0.layer.cornerRadius = 25
     }
 
-    private let favoriteButton = UIButton(type: .system).then {
+    let likeButton = UIButton(type: .system).then {
         $0.setImage(UIImage(systemName: "heart"), for: .normal)
         $0.tintColor = .systemGray3
         $0.backgroundColor = .systemGray6
@@ -205,10 +205,10 @@ extension HomePostCardCell {
         // Likes
         self.likesLabel.text = "\(post.likesCount)명이 좋아합니다"
 
-        // Favorite
+        // Like Button
         let heartImage = post.isLiked ? "heart.fill" : "heart"
-        self.favoriteButton.setImage(UIImage(systemName: heartImage), for: .normal)
-        self.favoriteButton.tintColor = post.isLiked ? .systemPink : .systemGray3
+        self.likeButton.setImage(UIImage(systemName: heartImage), for: .normal)
+        self.likeButton.tintColor = post.isLiked ? .systemPink : .systemGray3
 
         // Link
         self.linkButton.rx.tap
@@ -291,7 +291,7 @@ extension HomePostCardCell {
             // Button row
             flex.addItem().direction(.row).alignItems(.center).marginTop(16).define { row in
                 row.addItem(self.linkButton).grow(1).height(50)
-                row.addItem(self.favoriteButton).size(50).marginLeft(10)
+                row.addItem(self.likeButton).size(50).marginLeft(10)
             }
         }
     }

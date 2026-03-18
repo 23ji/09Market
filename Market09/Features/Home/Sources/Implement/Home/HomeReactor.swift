@@ -17,6 +17,9 @@ final class HomeReactor: Reactor, FactoryModule {
     struct Dependency {
         let fetchPostsListUseCase: FetchPostsListUseCase
         let fetchTop10PostsUseCase: FetchTop10PostsUseCase
+        let likePostUseCase: LikePostUseCase
+        let cancelLikePostUseCase: CancelLikePostUseCase
+        let userStore: UserStore
     }
 
     enum Action {
@@ -24,6 +27,8 @@ final class HomeReactor: Reactor, FactoryModule {
         case loadNextPage
         case selectCategory(GroupBuyingCategory?)
         case searchKeyword(String)
+        case toggleLike(String, Bool)
+        case confirmLogin
     }
 
     enum Mutation {
@@ -32,6 +37,9 @@ final class HomeReactor: Reactor, FactoryModule {
         case setSelectedCategory(GroupBuyingCategory?)
         case setKeyword(String)
         case setError(AppError?)
+        case setLikeStatus(String, Bool)
+        case setNeedsLogin
+        case setLoginConfirmed
     }
 
     struct State {
@@ -43,12 +51,15 @@ final class HomeReactor: Reactor, FactoryModule {
         var hasNextPage: Bool = true
         var isLoading: Bool = false
         @Pulse var error: AppError?
+        @Pulse var needsLogin: Bool = false
+        @Pulse var loginConfirmed: Bool = false
     }
 
     let initialState: State = State()
     private let dependency: Dependency
     private let pageSize = 30
     private let searchKeyword = BehaviorSubject<String>(value: "")
+    private var likingPostIds: Set<String> = []
 
     required init(dependency: Dependency, payload: Void) {
         self.dependency = dependency
@@ -88,6 +99,39 @@ extension HomeReactor {
         case .searchKeyword(let keyword):
             self.searchKeyword.onNext(keyword)
             return .just(.setKeyword(keyword))
+            
+        // isLiked -> 좋아요 버튼을 누른 시점의 좋아요 상태(좋아요 요청 호출 전)
+        case .toggleLike(let postId, let isLiked):
+            guard self.dependency.userStore.isLoggedIn else {
+                return .just(.setNeedsLogin)
+            }
+            
+            guard !self.likingPostIds.contains(postId) else {
+                return .empty()
+            }
+            
+            self.likingPostIds.insert(postId)
+            
+            return .concat([
+                // UI 즉시 변경 + 좋아요 요청 호출 후 예상 결과 => !isLiked(toggle)
+                .just(.setLikeStatus(postId, !isLiked)),
+                Observable.task {
+                    if isLiked {
+                        try await self.dependency.cancelLikePostUseCase.execute(postId: postId)
+                    } else {
+                        try await self.dependency.likePostUseCase.execute(postId: postId)
+                    }
+                }
+                .flatMap { Observable<Mutation>.empty() }
+                .catch { .concat([
+                    .just(.setError($0 as? AppError)),
+                    .just(.setLikeStatus(postId, isLiked))
+                ])}
+                .do(onDispose: { self.likingPostIds.remove(postId) })
+            ])
+            
+        case .confirmLogin:
+            return .just(.setLoginConfirmed)
         }
     }
 
@@ -128,6 +172,27 @@ extension HomeReactor {
             
         case .setKeyword(let keyword):
             newState.searchKeyword = keyword
+            
+        case .setLikeStatus(let postId, let isLiked):
+            newState.posts = state.posts.map { post in
+                guard post.id == postId else { return post }
+                var updated = post
+                updated.isLiked = isLiked
+                updated.likesCount += isLiked ? 1 : -1
+                return updated
+            }
+            
+            newState.sections = self.buildSections(
+                selectedCategory: newState.selectedCategory,
+                posts: newState.posts,
+                isLoading: newState.isLoading
+            )
+            
+        case .setNeedsLogin:
+            newState.needsLogin = true
+            
+        case .setLoginConfirmed:
+            newState.loginConfirmed = true
 
         case .setError(let error):
             newState.error = error
