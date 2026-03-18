@@ -7,10 +7,12 @@
 
 import UIKit
 
+import DesignSystem
+
 final class AuthViewController: UIViewController {
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "스플래시"
+        label.text = Strings.Auth.splash
         label.font = .systemFont(ofSize: 32, weight: .bold)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false

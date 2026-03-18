@@ -7,6 +7,7 @@
 
 import UIKit
 
+import DesignSystem
 import Domain
 import Shared_DI
 import Shared_UI
@@ -46,7 +47,7 @@ final class HomeCategoryChipCell: UICollectionViewCell, ConfiguratorModule {
 
 extension HomeCategoryChipCell {
     func configure(dependency: Dependency, payload: Payload) {
-        self.titleLabel.text = payload.category?.rawValue ?? "전체"
+        self.titleLabel.text = payload.category?.rawValue ?? Strings.Home.categoryAll
 
         if payload.isSelected {
             self.contentView.backgroundColor = .black

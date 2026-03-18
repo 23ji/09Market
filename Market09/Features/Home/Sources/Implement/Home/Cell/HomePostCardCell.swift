@@ -7,6 +7,7 @@
 
 import UIKit
 
+import DesignSystem
 import Domain
 import Shared_DI
 import Shared_UI
@@ -113,7 +114,7 @@ final class HomePostCardCell: UICollectionViewCell, ConfiguratorModule {
     }
 
     private let linkButton = UIButton(type: .system).then {
-        $0.setTitle("공구 링크로 이동", for: .normal)
+        $0.setTitle(Strings.Home.goToLink, for: .normal)
         $0.setTitleColor(.white, for: .normal)
         $0.titleLabel?.font = .systemFont(ofSize: 15, weight: .semibold)
         $0.backgroundColor = UIColor(red: 0.15, green: 0.15, blue: 0.2, alpha: 1.0)
@@ -197,13 +198,13 @@ extension HomePostCardCell {
 
         if let price = post.price,
            let formatted = Self.priceFormatter.string(from: NSNumber(value: price)) {
-            self.priceLabel.text = "\(formatted)원"
+            self.priceLabel.text = Strings.Home.price(formatted)
         } else {
-            self.priceLabel.text = "가격 미정"
+            self.priceLabel.text = Strings.Home.priceUndecided
         }
 
         // Likes
-        self.likesLabel.text = "\(post.likesCount)명이 좋아합니다"
+        self.likesLabel.text = Strings.Home.likesCount(post.likesCount)
 
         // Like Button
         let heartImage = post.isLiked ? "heart.fill" : "heart"
@@ -224,10 +225,10 @@ extension HomePostCardCell {
 
     private func statusText(_ status: GroupBuyingStatus) -> String {
         switch status {
-        case .upcoming: return "오픈예정"
-        case .ongoing: return "진행중"
-        case .closingSoon: return "마감임박"
-        case .closed: return "마감"
+        case .upcoming: return Strings.Home.statusUpcoming
+        case .ongoing: return Strings.Home.statusOngoing
+        case .closingSoon: return Strings.Home.statusClosingSoon
+        case .closed: return Strings.Home.statusClosed
         }
     }
 

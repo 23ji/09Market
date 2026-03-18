@@ -149,7 +149,7 @@ extension ProfileViewController: View {
             .distinctUntilChanged { $0?.id == $1?.id }
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] user in
-                self?.nicknameLabel.text = user?.nickname ?? "사용자"
+                self?.nicknameLabel.text = user?.nickname ?? Strings.Profile.defaultNickname
                 self?.providerLabel.text = user?.provider.rawValue
             })
             .disposed(by: self.disposeBag)

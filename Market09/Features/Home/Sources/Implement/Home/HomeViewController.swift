@@ -39,7 +39,7 @@ final class HomeViewController: UIViewController, FactoryModule {
     // MARK: - UI
 
     private let searchBar = UISearchBar().then {
-        $0.placeholder = "브랜드, 상품 검색"
+        $0.placeholder = Strings.Home.searchPlaceholder
         $0.searchBarStyle = .minimal
     }
 
@@ -207,7 +207,7 @@ extension HomeViewController: View {
                 guard let self else { return }
                 ConfirmDialog.show(
                     on: self,
-                    message: "로그인이 필요합니다.\n로그인 화면으로 이동할까요?",
+                    message: Strings.Home.loginRequired,
                     confirmAction: { reactor.action.onNext(.confirmLogin) }
                 )
             })
