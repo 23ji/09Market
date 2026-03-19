@@ -1,5 +1,5 @@
 {
-  "originHash" : "f769be44bba72c14f7e7584aa68e9c5fb65487dc7f6e0f7e2abcc19318bf1792",
+  "originHash" : "b5c5aa59098b5c6fc1a66a7f7a191f58167d162e504449155e0b078630f1c2c2",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -134,6 +134,15 @@
       "state" : {
         "revision" : "8fa33f09c6f6621a2aa536d739956d53b84dd139",
         "version" : "3.2.0"
+      }
+    },
+    {
+      "identity" : "reusablekit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/devxoul/ReusableKit",
+      "state" : {
+        "revision" : "22910a503dfc81018c0270dbb62a30279d80b00f",
+        "version" : "4.0.0"
       }
     },
     {

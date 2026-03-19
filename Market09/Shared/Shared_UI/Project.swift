@@ -22,7 +22,8 @@ let project = Project(
             dependencies: [
                 .external(name: "SnapKit"),
                 .external(name: "FlexLayout"),
-                .external(name: "PinLayout")
+                .external(name: "PinLayout"),
+                .external(name: "ReusableKit")
             ]
         ),
     ]

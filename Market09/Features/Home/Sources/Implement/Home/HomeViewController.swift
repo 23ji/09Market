@@ -36,6 +36,14 @@ final class HomeViewController: UIViewController, FactoryModule {
     }
 
 
+    // MARK: - CellType
+
+    static let categoryCell = ReusableCell<HomeCategoryChipCell>()
+    static let bannerCell = ReusableCell<HomeTop10BannerCell>()
+    static let postCell = ReusableCell<HomePostCardCell>()
+    static let skeletonCell = ReusableCell<HomePostSkeletonCell>()
+
+
     // MARK: - UI
 
     private let searchBar = UISearchBar().then {
@@ -49,10 +57,10 @@ final class HomeViewController: UIViewController, FactoryModule {
             collectionViewLayout: HomeCollectionViewLayout.create()
         )
         cv.backgroundColor = .systemBackground
-        cv.register(HomeCategoryChipCell.self, forCellWithReuseIdentifier: "CategoryCell")
-        cv.register(HomeTop10BannerCell.self, forCellWithReuseIdentifier: "BannerCell")
-        cv.register(HomePostCardCell.self, forCellWithReuseIdentifier: "PostCell")
-        cv.register(HomePostSkeletonCell.self, forCellWithReuseIdentifier: "SkeletonCell")
+        cv.register(Self.categoryCell)
+        cv.register(Self.bannerCell)
+        cv.register(Self.postCell)
+        cv.register(Self.skeletonCell)
         return cv
     }()
 
@@ -96,10 +104,7 @@ extension HomeViewController: View {
             configureCell: { [weak reactor] _, collectionView, indexPath, item in
                 switch item {
                 case .category(let category, let isSelected):
-                    guard let cell = collectionView.dequeueReusableCell(
-                        withReuseIdentifier: "CategoryCell", for: indexPath
-                    ) as? HomeCategoryChipCell else { return UICollectionViewCell() }
-
+                    let cell = collectionView.dequeue(HomeViewController.categoryCell, for: indexPath)
                     cell.configure(
                         dependency: .init(),
                         payload: .init(
@@ -107,22 +112,15 @@ extension HomeViewController: View {
                             isSelected: isSelected
                         )
                     )
-
                     return cell
 
                 case .top10Banner:
-                    guard let cell = collectionView.dequeueReusableCell(
-                        withReuseIdentifier: "BannerCell", for: indexPath
-                    ) as? HomeTop10BannerCell else { return UICollectionViewCell() }
-
+                    let cell = collectionView.dequeue(HomeViewController.bannerCell, for: indexPath)
                     cell.configure(dependency: .init(), payload: .init())
                     return cell
 
                 case .post(let post):
-                    guard let cell = collectionView.dequeueReusableCell(
-                        withReuseIdentifier: "PostCell", for: indexPath
-                    ) as? HomePostCardCell else { return UICollectionViewCell() }
-
+                    let cell = collectionView.dequeue(HomeViewController.postCell, for: indexPath)
                     cell.configure(dependency: .init(), payload: .init(post: post))
 
                     cell.likeButton.rx.tap
@@ -133,10 +131,7 @@ extension HomeViewController: View {
                     return cell
 
                 case .skeleton(_):
-                    guard let cell = collectionView.dequeueReusableCell(
-                        withReuseIdentifier: "SkeletonCell", for: indexPath
-                    ) as? HomePostSkeletonCell else { return UICollectionViewCell() }
-
+                    let cell = collectionView.dequeue(HomeViewController.skeletonCell, for: indexPath)
                     return cell
                 }
             }
