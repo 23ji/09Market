@@ -7,6 +7,7 @@
 
 import UIKit
 
+import DesignSystem
 import Shared_DI
 import Shared_UI
 
@@ -20,7 +21,7 @@ final class HomeTop10BannerCell: UICollectionViewCell, ConfiguratorModule {
 
     private let bannerButton = UIButton(type: .system).then {
         // TODO: 추후에 이미지 버튼으로 변경할 것
-        $0.setTitle("이번 주 핫딜 TOP 10", for: .normal)
+        $0.setTitle(Strings.Home.top10Banner, for: .normal)
         $0.setTitleColor(.white, for: .normal)
         $0.titleLabel?.font = .systemFont(ofSize: 18, weight: .bold)
         $0.backgroundColor = .systemOrange
