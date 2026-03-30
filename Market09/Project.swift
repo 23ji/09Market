@@ -45,7 +45,7 @@ let project = Project(
                     "SUPABASE_URL": "$(SUPABASE_URL)",
                     "SUPABASE_ANON_KEY": "$(SUPABASE_ANON_KEY)",
                     
-                    // Goole
+                    // Google
                     "GIDClientID": "$(GOOGLE_CLIENT_ID)",
                     
                     // URL Scheme for Google Sign-In callback
@@ -76,6 +76,8 @@ let project = Project(
                 .module(.designSystem),
                 .feature(.home, type: .interface),
                 .feature(.home, type: .implement),
+                .feature(.calendar, type: .interface),
+                .feature(.calendar, type: .implement),
                 .feature(.auth, type: .interface),
                 .feature(.auth, type: .implement),
                 .feature(.profile, type: .interface),
@@ -83,6 +85,7 @@ let project = Project(
                 .feature(.login, type: .interface),
                 .feature(.login, type: .implement),
                 .module(.sharedDI),
+                .external(name: "LookinServer"),
             ],
             settings: .settings(
                 base: [

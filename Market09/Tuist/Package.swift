@@ -28,5 +28,6 @@ let package = Package(
         .package(url: "https://github.com/layoutBox/FlexLayout", from: "2.0.0"),
         .package(url: "https://github.com/layoutBox/PinLayout", from: "1.10.0"),
         .package(url: "https://github.com/SnapKit/SnapKit", from: "5.7.0"),
+        .package(url: "https://github.com/QMUI/LookinServer.git", from: "1.2.8"),
     ]
 )
