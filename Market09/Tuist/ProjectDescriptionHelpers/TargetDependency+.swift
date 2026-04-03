@@ -11,6 +11,7 @@ import ProjectDescription
 
 public enum Feature: String {
     case home = "Home"
+    case schedule = "Schedule"
     case auth = "Authenticate"
     case profile = "Profile"
     case login = "Login"
