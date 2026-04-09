@@ -99,6 +99,12 @@ public final class DomainAssembly: Assembly {
                 influencerRepository: r.resolve()
             )
         }.inObjectScope(.container)
+
+        container.register(SearchInfluencersUseCase.self) { r in
+            SearchInfluencersUseCaseImpl(
+                influencerRepository: r.resolve()
+            )
+        }.inObjectScope(.container)
         
         
         // MARK: - Upload

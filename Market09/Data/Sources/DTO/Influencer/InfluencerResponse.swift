@@ -1,11 +1,11 @@
 //
-//  PostInfluencerResponse.swift
+//  InfluencerResponse.swift
 //  Data
 //
 //  Created by Sangjin Lee
 //
 
-struct PostInfluencerResponse: Decodable {
+struct InfluencerResponse: Decodable {
     let id: String
     let username: String
     let fullName: String

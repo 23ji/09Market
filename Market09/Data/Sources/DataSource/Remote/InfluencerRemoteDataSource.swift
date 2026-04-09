@@ -15,6 +15,12 @@ protocol InfluencerRemoteDataSource {
     ///   - username: 인플루언서 ID
     /// - Throws: `AppError.network(.conflict)` 이미 등록된 경우
     func registerInfluencer(_ username: String) async throws
+
+    /// GET — username 포함 검색 (최대 3개)
+    /// - Parameters:
+    ///   - username: 검색할 username
+    /// - Returns: 매칭된 인플루언서 목록
+    func searchInfluencers(_ username: String) async throws -> [InfluencerResponse]
 }
 
 final class InfluencerRemoteDataSourceImpl: InfluencerRemoteDataSource {
@@ -30,6 +36,18 @@ final class InfluencerRemoteDataSourceImpl: InfluencerRemoteDataSource {
             let queryItems = [URLQueryItem(name: InfluencerQueryKey.kAction, value: InfluencerAction.kRegister)]
             let body = try JSONEncoder().encode(InfluencerRegisterRequest(instagramUsername: username))
             _ = try await self.apiClient.post(endpoint, queryItems: queryItems, body: body)
+        }
+    }
+
+    func searchInfluencers(_ username: String) async throws -> [InfluencerResponse] {
+        return try await performRequest {
+            let endpoint = self.influencerEndpoint()
+            let queryItems = [
+                URLQueryItem(name: InfluencerQueryKey.kAction, value: InfluencerAction.kSearch),
+                URLQueryItem(name: InfluencerQueryKey.kUsername, value: username)
+            ]
+            let data = try await self.apiClient.get(endpoint, queryItems: queryItems)
+            return try JSONDecoder().decode([InfluencerResponse].self, from: data)
         }
     }
 }
@@ -60,8 +78,10 @@ extension InfluencerRemoteDataSourceImpl {
 
 private enum InfluencerQueryKey {
     static let kAction = "action"
+    static let kUsername = "username"
 }
 
 private enum InfluencerAction {
     static let kRegister = "register"
+    static let kSearch = "search"
 }

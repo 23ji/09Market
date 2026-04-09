@@ -17,4 +17,9 @@ final class InfluencerRepositoryImpl: InfluencerRepository {
     func registerInfluencer(_ username: String) async throws {
         try await self.remoteDataSource.registerInfluencer(username)
     }
+
+    func searchInfluencers(_ username: String) async throws -> [Influencer] {
+        let responses = try await self.remoteDataSource.searchInfluencers(username)
+        return responses.map { InfluencerMapper.toInfluencerEntity($0) }
+    }
 }

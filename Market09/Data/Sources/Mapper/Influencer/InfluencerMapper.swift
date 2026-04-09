@@ -8,7 +8,7 @@
 import Domain
 
 enum InfluencerMapper {
-    static func toInfluencerEntity(_ response: PostInfluencerResponse) -> Influencer {
+    static func toInfluencerEntity(_ response: InfluencerResponse) -> Influencer {
         return Influencer(
             id: response.id,
             username: response.username,

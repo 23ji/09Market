@@ -16,7 +16,7 @@ struct PostResponse: Decodable {
     let groupBuyingUrl: String?
     let likesCount: Int
     let postedAt: String
-    let influencer: PostInfluencerResponse
+    let influencer: InfluencerResponse
     let isLiked: Bool
 
     enum CodingKeys: String, CodingKey {
