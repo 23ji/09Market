@@ -97,12 +97,22 @@ extension LoginViewController: View {
             .disposed(by: self.disposeBag)
 
         self.appleLoginButton.rx.tap
-            .subscribe(onNext: { [weak self] in
+            .map { Reactor.Action.appleLoginTapped }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+
+      // MARK: - State
+
+      reactor.pulse(\.$appleLoginHashedNonce)
+            .compactMap{ $0 }
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] hashedNonce in
                 guard let self else { return }
 
                 let appleIDProvider = ASAuthorizationAppleIDProvider()
                 let request = appleIDProvider.createRequest()
                 request.requestedScopes = [.fullName, .email]
+                request.nonce = hashedNonce
 
                 let authorizationController = ASAuthorizationController(authorizationRequests: [request])
                 authorizationController.delegate = self
@@ -177,7 +187,8 @@ extension LoginViewController: ASAuthorizationControllerDelegate {
             return
         }
 
-        self.reactor?.action.onNext(.appleLoginCompleted(idToken: idToken, nonce: ""))
+      guard let nonce = self.reactor?.currentState.appleLoginNonce else { return }
+        self.reactor?.action.onNext(.appleLoginCompleted(idToken: idToken, nonce: nonce))
     }
 
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
